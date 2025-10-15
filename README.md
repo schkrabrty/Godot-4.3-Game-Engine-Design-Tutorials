@@ -1,4 +1,4 @@
-# Soumya-Class-Demo
+# Godot-4.3-Game-Engine-Design-Tutorials
 
 In this tutorial, I will show you how can you create your own custom shaders, and play with them in your game using your own custom logic and physics. In the video below, I will show you how can you write shaders in Godot to simulate a wind effect on grasses and a ball (while floating on the water). I will also show you how to create a water shader. Next, I will show you how can you consider the directional light direction and its color in your fragment shaders. Finally, I will show you how can you use Physics with your custom shaders so that your shaders can be used with physics in normal games in Godot. 
 
