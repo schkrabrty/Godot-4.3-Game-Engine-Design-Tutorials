@@ -2,6 +2,7 @@
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
 #include <modifyspeed.h>
+#include <godot_cpp/classes/engine.hpp>
 
 using namespace godot;
 
@@ -28,11 +29,24 @@ float ModifySpeed::get_multiplier() const {
     return multiplier;
 }
 
+void ModifySpeed::_init() {
+    // Initialization code
+    if (Engine::get_singleton()->is_editor_hint()) {
+        // Skip runtime-specific initialization
+        return;
+    }
+}
+
 void ModifySpeed::_ready() {
     call_deferred("process_secondary_script");
 }
 
 void ModifySpeed::process_secondary_script() {
+    if (Engine::get_singleton()->is_editor_hint()) {
+        // Skip runtime-specific initialization
+        return;
+    }
+    
     Node *parent_node = get_parent();
     String x = "Node is = " + parent_node->get_name();
     UtilityFunctions::print(x);

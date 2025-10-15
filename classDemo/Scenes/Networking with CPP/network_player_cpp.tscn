@@ -1,0 +1,59 @@
+[gd_scene load_steps=8 format=3 uid="uid://fdfpfkb3j2fg"]
+
+[ext_resource type="PackedScene" uid="uid://bfi1s7xmnj7eu" path="res://Scenes/Networking with CPP/simple_gun_cpp.tscn" id="1_045wo"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rspr0"]
+albedo_color = Color(0.927255, 0.260801, 0.155683, 1)
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_fx82j"]
+material = SubResource("StandardMaterial3D_rspr0")
+
+[sub_resource type="SphereMesh" id="SphereMesh_hn0ni"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_j0qn7"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_kbiv2"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_caavu"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+
+[node name="Player" type="MyCharacter"]
+
+[node name="BodyMesh" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+mesh = SubResource("CapsuleMesh_fx82j")
+
+[node name="LeftEye" type="MeshInstance3D" parent="BodyMesh"]
+transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, -0.2, 0.5, -0.45)
+mesh = SubResource("SphereMesh_hn0ni")
+
+[node name="RightEye" type="MeshInstance3D" parent="BodyMesh"]
+transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0.2, 0.5, -0.45)
+mesh = SubResource("SphereMesh_j0qn7")
+skeleton = NodePath("../LeftEye")
+
+[node name="BodyCollider" type="CollisionShape3D" parent="."]
+transform = Transform3D(1.1, 0, 0, 0, 1, 0, 0, 0, 1.1, 0, 1, 0)
+shape = SubResource("CapsuleShape3D_kbiv2")
+
+[node name="CameraOrigin" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+
+[node name="SpringArm3D" type="SpringArm3D" parent="CameraOrigin"]
+spring_length = 2.0
+margin = 0.5
+
+[node name="Camera3D" type="Camera3D" parent="CameraOrigin/SpringArm3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2)
+
+[node name="SimpleGun" parent="." instance=ExtResource("1_045wo")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.652, 1.404, 0.082)
+script = null
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_caavu")

@@ -1,0 +1,53 @@
+[gd_scene load_steps=8 format=3 uid="uid://co12ly38gfsx0"]
+
+[ext_resource type="Script" path="res://Scripts/water.gd" id="1_avu5l"]
+[ext_resource type="Shader" path="res://Shaders/water.gdshader" id="1_nxbeb"]
+[ext_resource type="Texture2D" uid="uid://bhnv33a0xfe25" path="res://Materials/Water/water_noise.tres" id="3_tl7gs"]
+[ext_resource type="Texture2D" uid="uid://f4ayweea1lah" path="res://Materials/Water/water_normal_map.tres" id="4_382g1"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_2j11a"]
+render_priority = 0
+shader = ExtResource("1_nxbeb")
+shader_parameter/height_scale = 0.5
+shader_parameter/wind_strength = 0.3
+shader_parameter/wind_speed = 1.0
+shader_parameter/wind_direction = Vector3(1, 0, 0)
+shader_parameter/directional_light_color = null
+shader_parameter/directional_light_direction = null
+shader_parameter/water_roughness = 0.01
+shader_parameter/water_specular = 1.0
+shader_parameter/water_metallic = 0.0
+shader_parameter/water_base_color = Vector3(0.1, 0.3, 0.5)
+shader_parameter/refraction_strength = 0.05
+shader_parameter/water_color_strength = 10.0
+shader_parameter/cool_lighting_on = false
+shader_parameter/reflection_on = false
+shader_parameter/noise = ExtResource("3_tl7gs")
+shader_parameter/normalmap = ExtResource("4_382g1")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_8q63k"]
+material = SubResource("ShaderMaterial_2j11a")
+size = Vector2(16, 16)
+subdivide_width = 100
+subdivide_depth = 100
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_wrg4h"]
+size = Vector3(16, 1, 16)
+
+[node name="Node3D" type="Node3D"]
+script = ExtResource("1_avu5l")
+
+[node name="Water" type="MeshInstance3D" parent="."]
+mesh = SubResource("PlaneMesh_8q63k")
+
+[node name="Area3D" type="Area3D" parent="Water"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Water/Area3D"]
+shape = SubResource("BoxShape3D_wrg4h")
+
+[connection signal="directional_Light_setup" from="." to="." method="_on_directional_light_setup"]
+[connection signal="lighting_and_reflection_on" from="." to="." method="_on_lighting_and_reflection_on"]
+[connection signal="wind_direction_changed" from="." to="." method="_on_wind_direction_changed"]
+[connection signal="wind_speed_changed" from="." to="." method="_on_wind_speed_changed"]
+[connection signal="wind_strength_changed" from="." to="." method="_on_wind_strength_changed"]
+[connection signal="body_entered" from="Water/Area3D" to="." method="_on_ball_entered"]

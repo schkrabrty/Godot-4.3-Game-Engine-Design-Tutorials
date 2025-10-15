@@ -1,0 +1,32 @@
+[gd_scene load_steps=4 format=3 uid="uid://bfi1s7xmnj7eu"]
+
+[sub_resource type="GDScript" id="GDScript_ax7oi"]
+script/source = "extends BulletSpawner
+
+
+@rpc(\"any_peer\", \"call_local\", \"unreliable_ordered\")
+func call_spawn_bullet(bullet_transform: Transform3D):
+	# Access the C++ method on the BulletSpawner node.
+	print(\"Spawn Bullet Called!\")
+	$\".\".spawn_bullet(bullet_transform)
+"
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_i1sa1"]
+albedo_color = Color(0.240032, 0.0227196, 0, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_iube0"]
+material = SubResource("StandardMaterial3D_i1sa1")
+
+[node name="SimpleGun" type="BulletSpawner"]
+script = SubResource("GDScript_ax7oi")
+
+[node name="Barrel" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.8, 0, 0, -0.146032)
+mesh = SubResource("BoxMesh_iube0")
+
+[node name="Muzzle" type="Node3D" parent="Barrel"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.523522)
+
+[node name="Holder" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.2, 0, 0, 0, 0.0684368, -0.375853, 0, 0.187927, 0.136874, 0, -0.195156, 0.191869)
+mesh = SubResource("BoxMesh_iube0")

@@ -1,0 +1,26 @@
+[gd_scene load_steps=4 format=3 uid="uid://owxiy1bue1nr"]
+
+[ext_resource type="Script" path="res://Scripts/grass_UI_Helper.gd" id="1_pop2h"]
+[ext_resource type="Material" uid="uid://dm4g36nwrc6nl" path="res://Materials/grass.tres" id="2_8dkk6"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_vw1vh"]
+material = ExtResource("2_8dkk6")
+top_radius = 0.001
+bottom_radius = 0.01
+height = 0.5
+radial_segments = 100
+rings = 100
+
+[node name="Node3D" type="Node3D"]
+script = ExtResource("1_pop2h")
+
+[node name="Grass" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.318, 0)
+mesh = SubResource("CylinderMesh_vw1vh")
+
+[connection signal="ball_repulsion" from="." to="." method="_on_ball_repulsion"]
+[connection signal="directional_Light_setup" from="." to="." method="_on_directional_light_setup"]
+[connection signal="lighting_and_reflection_on" from="." to="." method="_on_lighting_and_reflection_on"]
+[connection signal="wind_direction_changed" from="." to="." method="_on_wind_direction_changed"]
+[connection signal="wind_speed_changed" from="." to="." method="_on_wind_speed_changed"]
+[connection signal="wind_strength_changed" from="." to="." method="_on_wind_strength_changed"]

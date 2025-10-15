@@ -1,0 +1,35 @@
+[gd_scene load_steps=7 format=3 uid="uid://sgnwjw6mv8qp"]
+
+[ext_resource type="Script" path="res://Scripts/rock_UI_Helper.gd" id="1_7t5fi"]
+[ext_resource type="Shader" path="res://Shaders/rock.gdshader" id="1_wqsyh"]
+[ext_resource type="Texture2D" uid="uid://onot3qyrq0fe" path="res://Materials/Rock/rock_noise.tres" id="3_fncyd"]
+[ext_resource type="Texture2D" uid="uid://cb368klqu1xj7" path="res://Materials/Rock/rock_normal_map.tres" id="4_o4s38"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ukytw"]
+render_priority = 0
+shader = ExtResource("1_wqsyh")
+shader_parameter/axis_scale = Vector3(1, 1, 1)
+shader_parameter/height_scale = 0.2
+shader_parameter/base_color = Vector3(0.1, 0.1, 0.1)
+shader_parameter/top_color = Vector3(0.8, 0.4, 0.2)
+shader_parameter/directional_light_color = null
+shader_parameter/directional_light_direction = null
+shader_parameter/cool_lighting_on = false
+shader_parameter/noise = ExtResource("3_fncyd")
+shader_parameter/normalmap = ExtResource("4_o4s38")
+
+[sub_resource type="SphereMesh" id="SphereMesh_6oqtw"]
+material = SubResource("ShaderMaterial_ukytw")
+radial_segments = 100
+rings = 100
+
+[node name="Node3D" type="Node3D"]
+script = ExtResource("1_7t5fi")
+
+[node name="Rock" type="MeshInstance3D" parent="."]
+transform = Transform3D(2.23644, 0, 0, 0, 1, 0, 0, 0, 1.28086, 0, 0, 0)
+mesh = SubResource("SphereMesh_6oqtw")
+
+[connection signal="light_parameters" from="." to="." method="_on_light_parameters"]
+[connection signal="lighting_and_reflection_on" from="." to="." method="_on_lighting_and_reflection_on"]
+[connection signal="update_parameters" from="." to="." method="_on_update_parameters"]
