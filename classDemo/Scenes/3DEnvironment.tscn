@@ -1,0 +1,204 @@
+[gd_scene load_steps=25 format=3 uid="uid://cpfnoad4ukpnc"]
+
+[ext_resource type="Shader" path="res://Shaders/vegetationTerrain.gdshader" id="1_0jokw"]
+[ext_resource type="Texture2D" uid="uid://dm8xuvryq7vso" path="res://Images/Grass_005_SD/Grass_005_BaseColor.jpg" id="3_2x4qv"]
+[ext_resource type="Texture2D" uid="uid://d0mh7intmfnhh" path="res://Materials/Terrain/terrain_noise.tres" id="4_dwtt6"]
+[ext_resource type="Script" path="res://Scripts/panel_for_Wind_Shader.gd" id="4_omrt4"]
+[ext_resource type="Script" path="res://Scripts/third_person_camera_movement.gd" id="5_35ixr"]
+[ext_resource type="PackedScene" uid="uid://co12ly38gfsx0" path="res://Scenes/water.tscn" id="5_a7s6l"]
+[ext_resource type="Texture2D" uid="uid://bmnwwugcxlejj" path="res://Materials/Terrain/terrain_normal_map.tres" id="5_w5qh4"]
+[ext_resource type="Script" path="res://Scripts/test_ball_collision_detection.gd" id="7_qgcow"]
+[ext_resource type="Shader" path="res://Shaders/CustomBallShader.gdshader" id="8_upwvt"]
+[ext_resource type="Script" path="res://Scripts/Custom_Shiny_Spiky_Ball_Controller.gd" id="9_ntsjc"]
+[ext_resource type="Script" path="res://Scripts/Light_and_Reflection_manipulator.gd" id="11_m0psa"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_dagtn"]
+render_priority = 0
+shader = ExtResource("1_0jokw")
+shader_parameter/height_scale = 0.2
+shader_parameter/texture_scale = 100.0
+shader_parameter/slope_factor = 2.0
+shader_parameter/slope_start = -8.0
+shader_parameter/slope_end = 8.0
+shader_parameter/directional_light_color = null
+shader_parameter/directional_light_direction = null
+shader_parameter/cool_lighting_on = false
+shader_parameter/noise = ExtResource("4_dwtt6")
+shader_parameter/normalmap = ExtResource("5_w5qh4")
+shader_parameter/grass_texture = ExtResource("3_2x4qv")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_q6s2y"]
+material = SubResource("ShaderMaterial_dagtn")
+size = Vector2(16, 16)
+subdivide_width = 100
+subdivide_depth = 100
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_0srk8"]
+size = Vector3(0.1, 10, 31.6)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_hwo24"]
+size = Vector3(0.1, 10, 31.6)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_wxgsc"]
+size = Vector3(16, 10, 0.1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_fhgys"]
+size = Vector3(16, 10, 0.1)
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_en1tv"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_i4ufc"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_0pks6"]
+noise = SubResource("FastNoiseLite_i4ufc")
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_lyifl"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_yl3al"]
+as_normal_map = true
+bump_strength = 30.0
+noise = SubResource("FastNoiseLite_lyifl")
+
+[sub_resource type="ShinySpikyBallMaterial" id="ShinySpikyBallMaterial_pld6u"]
+render_priority = 0
+shader = ExtResource("8_upwvt")
+shader_parameter/base_color = Vector4(0, 0.3, 0, 1)
+shader_parameter/metallic = 0.2
+shader_parameter/roughness = 0.2
+shader_parameter/specular = 1.0
+shader_parameter/deformation_strength = 0.1
+shader_parameter/noise_scale = 3.0
+shader_parameter/directional_light_color = null
+shader_parameter/directional_light_direction = Vector3(-0.3, -1, -0.3)
+shader_parameter/glow_color = Vector3(1, 1, 1)
+shader_parameter/glow_intensity = 0.5
+shader_parameter/dent_center = Vector3(0, 0, 0)
+shader_parameter/dent_radius = 0.5
+shader_parameter/dent_strength = 0.0
+shader_parameter/cool_lighting_on = false
+shader_parameter/noise_texture = SubResource("NoiseTexture2D_0pks6")
+shader_parameter/normal_noise = SubResource("NoiseTexture2D_yl3al")
+
+[sub_resource type="SphereMesh" id="SphereMesh_wj1mk"]
+material = SubResource("ShinySpikyBallMaterial_pld6u")
+radial_segments = 100
+rings = 100
+
+[node name="Node3D" type="Node3D"]
+script = ExtResource("4_omrt4")
+number_of_grasses = 2000
+
+[node name="Terrain" type="MeshInstance3D" parent="."]
+mesh = SubResource("PlaneMesh_q6s2y")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.5, 0.150384, -0.852868, 0, 0.984808, 0.173648, 0.866026, 0.0868241, -0.492404, 0, 0, 0)
+light_color = Color(1, 0.701961, 0.278431, 1)
+light_energy = 4.0
+shadow_enabled = true
+
+[node name="WaterBody" parent="." instance=ExtResource("5_a7s6l")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.15, 15.718)
+
+[node name="Borders" type="Node3D" parent="."]
+
+[node name="LeftBorder" type="StaticBody3D" parent="Borders"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 1, 7.826)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Borders/LeftBorder"]
+shape = SubResource("BoxShape3D_0srk8")
+
+[node name="RightBorder" type="StaticBody3D" parent="Borders"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 1, 7.826)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Borders/RightBorder"]
+shape = SubResource("BoxShape3D_hwo24")
+
+[node name="FrontBorder" type="StaticBody3D" parent="Borders"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 23.6)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Borders/FrontBorder"]
+shape = SubResource("BoxShape3D_wxgsc")
+
+[node name="BackBorder" type="StaticBody3D" parent="Borders"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -8)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Borders/BackBorder"]
+shape = SubResource("BoxShape3D_fhgys")
+
+[node name="ReflectionProbe" type="ReflectionProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 8)
+size = Vector3(16, 10, 32)
+
+[node name="TestBall" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.422, 4, -7)
+script = ExtResource("7_qgcow")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TestBall"]
+shape = SubResource("SphereShape3D_en1tv")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="TestBall"]
+mesh = SubResource("SphereMesh_wj1mk")
+script = ExtResource("9_ntsjc")
+glow_color = Color(0.903974, 8.52155e-05, 0.169191, 1)
+
+[node name="Camera3D" type="Camera3D" parent="."]
+script = ExtResource("5_35ixr")
+target = NodePath("../TestBall")
+
+[node name="Panel" type="Panel" parent="."]
+offset_left = 1500.0
+offset_top = 15.0
+offset_right = 1817.0
+offset_bottom = 128.0
+script = ExtResource("11_m0psa")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel"]
+layout_mode = 0
+offset_right = 250.0
+offset_bottom = 131.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Panel/VBoxContainer"]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+
+[node name="LightandReflectionOnLabel" type="Label" parent="Panel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Directional Light On? 
+"
+
+[node name="LightandReflectionOnButton" type="CheckButton" parent="Panel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Panel/VBoxContainer"]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+
+[node name="MoveSunLabel" type="Label" parent="Panel/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+text = "Move Sun? "
+
+[node name="MoveSunButton" type="CheckButton" parent="Panel/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="Panel/VBoxContainer"]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+
+[node name="RimLightingOnLabel" type="Label" parent="Panel/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+text = "Rim Lighting On? "
+
+[node name="RimLightingOnButton" type="CheckButton" parent="Panel/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="Panel/VBoxContainer"]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+
+[node name="ReflectionLabel" type="Label" parent="Panel/VBoxContainer/HBoxContainer4"]
+layout_mode = 2
+text = "Water Reflection On? "
+
+[node name="ReflectionButton" type="CheckButton" parent="Panel/VBoxContainer/HBoxContainer4"]
+layout_mode = 2

@@ -1,0 +1,138 @@
+[gd_scene load_steps=9 format=3 uid="uid://c6oxk2gu3rats"]
+
+[ext_resource type="Texture2D" uid="uid://ohx2ebkvlk8" path="res://Images/Pointer.png" id="1_aw8tb"]
+[ext_resource type="Texture2D" uid="uid://jxh6vxmtfx38" path="res://icon.svg" id="2_e1msc"]
+[ext_resource type="Script" path="res://Scripts/gravity_UI.gd" id="3_h1piu"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hnksb"]
+size = Vector2(20, 670)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_6jr87"]
+size = Vector2(1173, 20)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_jgkuv"]
+size = Vector2(1172, 20)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_queq2"]
+size = Vector2(20, 669)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_yagy0"]
+size = Vector2(64, 65)
+
+[node name="Node" type="Node"]
+
+[node name="Point" type="Node2D" parent="."]
+
+[node name="Sprite2D" type="Sprite2D" parent="Point"]
+scale = Vector2(0.3, 0.3)
+texture = ExtResource("1_aw8tb")
+
+[node name="Borders" type="Node" parent="."]
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Borders"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Borders/StaticBody2D"]
+position = Vector2(-10, 325)
+shape = SubResource("RectangleShape2D_hnksb")
+
+[node name="StaticBody2D2" type="StaticBody2D" parent="Borders"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Borders/StaticBody2D2"]
+position = Vector2(576.5, -10)
+shape = SubResource("RectangleShape2D_6jr87")
+
+[node name="StaticBody2D3" type="StaticBody2D" parent="Borders"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Borders/StaticBody2D3"]
+position = Vector2(576, 658)
+shape = SubResource("RectangleShape2D_jgkuv")
+
+[node name="StaticBody2D4" type="StaticBody2D" parent="Borders"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Borders/StaticBody2D4"]
+position = Vector2(1163, 324.5)
+shape = SubResource("RectangleShape2D_queq2")
+
+[node name="CustomGravityBody2D" type="CustomGravityBody2D" parent="."]
+position = Vector2(550, 300)
+gravity_scale = 0.0
+
+[node name="Sprite2D" type="Sprite2D" parent="CustomGravityBody2D"]
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("2_e1msc")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CustomGravityBody2D"]
+position = Vector2(0, 0.5)
+shape = SubResource("RectangleShape2D_yagy0")
+
+[node name="Panel" type="Panel" parent="."]
+offset_left = 878.0
+offset_top = 15.0
+offset_right = 1116.0
+offset_bottom = 136.0
+script = ExtResource("3_h1piu")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel"]
+layout_mode = 0
+offset_right = 250.0
+offset_bottom = 131.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Panel/VBoxContainer"]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+
+[node name="GravityStrengthLabel" type="Label" parent="Panel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Gravity Strength
+"
+
+[node name="GravityStrengthSlider" type="HSlider" parent="Panel/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+max_value = 200.0
+value = 98.0
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Panel/VBoxContainer"]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+
+[node name="GravityModeLabel" type="Label" parent="Panel/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+text = "Gravity Mode"
+
+[node name="GravityModeOption" type="OptionButton" parent="Panel/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+item_count = 3
+popup/item_0/text = "Local"
+popup/item_1/text = "Radial"
+popup/item_1/id = 1
+popup/item_2/text = "Point"
+popup/item_2/id = 2
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="Panel/VBoxContainer"]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+
+[node name="GravityCenterLabelX" type="Label" parent="Panel/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+text = "Gravity Center X"
+
+[node name="GravityCenterSliderX" type="HSlider" parent="Panel/VBoxContainer/HBoxContainer3"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+max_value = 1024.0
+value = 512.0
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="Panel/VBoxContainer"]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+
+[node name="GravityCenterLabelY" type="Label" parent="Panel/VBoxContainer/HBoxContainer4"]
+layout_mode = 2
+text = "Gravity Center Y"
+
+[node name="GravityCenterSliderY" type="HSlider" parent="Panel/VBoxContainer/HBoxContainer4"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+max_value = 768.0
+value = 384.0

@@ -18,6 +18,7 @@ namespace godot{
 		ModifySpeed();
 		~ModifySpeed();
 
+		void _init();
 		void _ready() override;
 		void set_multiplier(float value);
     	float get_multiplier() const;

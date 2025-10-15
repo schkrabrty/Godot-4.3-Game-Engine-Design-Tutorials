@@ -1,0 +1,138 @@
+[gd_scene load_steps=11 format=3 uid="uid://m263wklstw10"]
+
+[ext_resource type="Script" path="res://Scripts/parallax_main.gd" id="1_aphg7"]
+[ext_resource type="Shader" path="res://Shaders/Terrain_Parallax.gdshader" id="1_rp8dc"]
+[ext_resource type="Texture2D" uid="uid://wsolwycgh82n" path="res://Images/Bricks/Bricks082A_1K-JPG_Color.jpg" id="2_hs6ao"]
+[ext_resource type="Texture2D" uid="uid://wy8pr08gy0ql" path="res://Images/Bricks/Bricks082A_1K-JPG_AmbientOcclusion.jpg" id="3_d00im"]
+[ext_resource type="Texture2D" uid="uid://bu8xk0le8misb" path="res://Images/Bricks/Bricks082A_1K-JPG_Displacement.jpg" id="4_ltigq"]
+[ext_resource type="Texture2D" uid="uid://djy5redaft53r" path="res://Images/Bricks/Bricks082A_1K-JPG_NormalGL.jpg" id="5_4dsjv"]
+[ext_resource type="Texture2D" uid="uid://dabwepx73d6ca" path="res://Images/Bricks/Bricks082A_1K-JPG_Roughness.jpg" id="6_ah5l5"]
+[ext_resource type="Script" path="res://Scripts/parallax_panel.gd" id="7_lhbcf"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_5n7o3"]
+render_priority = 0
+shader = ExtResource("1_rp8dc")
+shader_parameter/albedo = Color(1, 1, 1, 1)
+shader_parameter/point_size = 1.0
+shader_parameter/roughness = 1.0
+shader_parameter/metallic_texture_channel = null
+shader_parameter/specular = 0.5
+shader_parameter/metallic = null
+shader_parameter/normal_scale = 1.0
+shader_parameter/ao_texture_channel = null
+shader_parameter/ao_light_affect = null
+shader_parameter/heightmap_scale = 5.0
+shader_parameter/heightmap_min_layers = 8
+shader_parameter/heightmap_max_layers = 32
+shader_parameter/heightmap_flip = Vector2(1, 1)
+shader_parameter/vertex_disp_scale = 0.2
+shader_parameter/uv1_scale = Vector3(1, 1, 1)
+shader_parameter/uv1_offset = null
+shader_parameter/uv2_scale = Vector3(1, 1, 1)
+shader_parameter/uv2_offset = null
+shader_parameter/directional_light_color = Vector3(1, 1, 1)
+shader_parameter/directional_light_direction = Vector3(1, 1, 1)
+shader_parameter/cool_lighting_on = false
+shader_parameter/vertex_shader_on = false
+shader_parameter/texture_albedo = ExtResource("2_hs6ao")
+shader_parameter/texture_roughness = ExtResource("6_ah5l5")
+shader_parameter/texture_normal = ExtResource("5_4dsjv")
+shader_parameter/texture_ambient_occlusion = ExtResource("3_d00im")
+shader_parameter/texture_heightmap = ExtResource("4_ltigq")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_2wd7p"]
+material = SubResource("ShaderMaterial_5n7o3")
+size = Vector2(5, 5)
+subdivide_width = 100
+subdivide_depth = 100
+
+[node name="Node3D" type="Node3D"]
+script = ExtResource("1_aphg7")
+
+[node name="Terrain" type="MeshInstance3D" parent="."]
+mesh = SubResource("PlaneMesh_2wd7p")
+
+[node name="Panel" type="Panel" parent="."]
+offset_left = 1566.0
+offset_top = 15.0
+offset_right = 1823.0
+offset_bottom = 150.0
+script = ExtResource("7_lhbcf")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel"]
+layout_mode = 0
+offset_right = 250.0
+offset_bottom = 131.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Panel/VBoxContainer"]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+
+[node name="LightandReflectionOnLabel" type="Label" parent="Panel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Directional Light On? 
+"
+
+[node name="LightandReflectionOnButton" type="CheckButton" parent="Panel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Panel/VBoxContainer"]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+
+[node name="MoveSunLabel" type="Label" parent="Panel/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+text = "Move Sun? "
+
+[node name="MoveSunButton" type="CheckButton" parent="Panel/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="Panel/VBoxContainer"]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+
+[node name="VertexDisplacementOnLabel" type="Label" parent="Panel/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+text = "Vertex Displacement On? "
+
+[node name="VertexDisplacementOnButton" type="CheckButton" parent="Panel/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="Panel/VBoxContainer"]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+
+[node name="HeightMapScaleLabel" type="Label" parent="Panel/VBoxContainer/HBoxContainer4"]
+layout_mode = 2
+text = "Height Map Scale"
+
+[node name="HeightMapScaleHSlider" type="HSlider" parent="Panel/VBoxContainer/HBoxContainer4"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+min_value = -6.0
+max_value = 6.0
+value = 5.0
+
+[node name="HBoxContainer5" type="HBoxContainer" parent="Panel/VBoxContainer"]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+
+[node name="VertexDisplayScaleLabel" type="Label" parent="Panel/VBoxContainer/HBoxContainer5"]
+layout_mode = 2
+text = "Vertex Shader Scale"
+
+[node name="VertexDisplayScaleHSlider" type="HSlider" parent="Panel/VBoxContainer/HBoxContainer5"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+max_value = 1.0
+step = 0.01
+value = 0.2
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.5, 0.150384, -0.852868, 0, 0.984808, 0.173648, 0.866026, 0.0868241, -0.492404, 0, 0, 0)
+light_color = Color(1, 0.701961, 0.278431, 1)
+light_energy = 4.0
+shadow_enabled = true
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(-1, 2.96249e-08, -8.22503e-08, 0, 0.940833, 0.338869, 8.74228e-08, 0.338869, -0.940833, -8.38971e-08, 2, -4.18767)

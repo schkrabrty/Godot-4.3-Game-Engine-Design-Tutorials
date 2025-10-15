@@ -1,0 +1,115 @@
+[gd_scene load_steps=16 format=3 uid="uid://2tmn8cwv2eto"]
+
+[ext_resource type="Shader" path="res://Shaders/Cel_shading.gdshader" id="1_jeroy"]
+[ext_resource type="Script" path="res://Scripts/cel_shading_main.gd" id="1_w3qbp"]
+[ext_resource type="Shader" path="res://Shaders/Cell_Shading_2.gdshader" id="2_tqarm"]
+[ext_resource type="Script" path="res://Scripts/cel_Shading_panel.gd" id="3_1xkga"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_423t3"]
+noise_type = 3
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_nhisk"]
+seamless = true
+noise = SubResource("FastNoiseLite_423t3")
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_486nm"]
+noise_type = 3
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_a8bfg"]
+seamless = true
+as_normal_map = true
+bump_strength = 1000.0
+noise = SubResource("FastNoiseLite_486nm")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_k8sh5"]
+render_priority = 0
+shader = ExtResource("2_tqarm")
+shader_parameter/noise_scale = 3.0
+shader_parameter/deformation_strength = 0.1
+shader_parameter/outline_thickness = 0.03
+shader_parameter/outline_color = Vector4(0, 0, 0, 1)
+shader_parameter/noise_texture = SubResource("NoiseTexture2D_nhisk")
+shader_parameter/normal_noise = SubResource("NoiseTexture2D_a8bfg")
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_teenr"]
+noise_type = 3
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_32uah"]
+seamless = true
+noise = SubResource("FastNoiseLite_teenr")
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_b0yvo"]
+noise_type = 3
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_babv7"]
+seamless = true
+as_normal_map = true
+noise = SubResource("FastNoiseLite_b0yvo")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_wlf4i"]
+render_priority = 0
+next_pass = SubResource("ShaderMaterial_k8sh5")
+shader = ExtResource("1_jeroy")
+shader_parameter/base_color = Vector4(0, 0.3, 0, 1)
+shader_parameter/deformation_strength = 0.1
+shader_parameter/noise_scale = 3.0
+shader_parameter/directional_light_color = Vector3(1, 1, 1)
+shader_parameter/directional_light_direction = Vector3(0, 1, 0)
+shader_parameter/toon_levels = 5
+shader_parameter/shadow_bias = 0.001
+shader_parameter/cool_lighting_on = false
+shader_parameter/noise_texture = SubResource("NoiseTexture2D_32uah")
+shader_parameter/normal_noise = SubResource("NoiseTexture2D_babv7")
+
+[sub_resource type="SphereMesh" id="SphereMesh_w0g2j"]
+material = SubResource("ShaderMaterial_wlf4i")
+
+[node name="Node3D" type="Node3D"]
+script = ExtResource("1_w3qbp")
+
+[node name="CartoonBall" type="MeshInstance3D" parent="."]
+mesh = SubResource("SphereMesh_w0g2j")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.5, 0.150384, -0.852868, 0, 0.984808, 0.173648, 0.866026, 0.0868241, -0.492404, 0, 0, 0)
+light_color = Color(1, 0.701961, 0.278431, 1)
+light_energy = 4.0
+shadow_enabled = true
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, -2)
+
+[node name="Panel" type="Panel" parent="."]
+offset_left = 1566.0
+offset_top = 15.0
+offset_right = 1789.0
+offset_bottom = 80.0
+script = ExtResource("3_1xkga")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel"]
+layout_mode = 0
+offset_right = 250.0
+offset_bottom = 131.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Panel/VBoxContainer"]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+
+[node name="LightandReflectionOnLabel" type="Label" parent="Panel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Directional Light On? 
+"
+
+[node name="LightandReflectionOnButton" type="CheckButton" parent="Panel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Panel/VBoxContainer"]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+
+[node name="MoveSunLabel" type="Label" parent="Panel/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+text = "Move Sun? "
+
+[node name="MoveSunButton" type="CheckButton" parent="Panel/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
