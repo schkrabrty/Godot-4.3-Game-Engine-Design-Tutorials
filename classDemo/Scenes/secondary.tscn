@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://h3vrum2h060c"]
+
+[ext_resource type="Script" path="res://Scripts/secondary.gd" id="1_sk6ev"]
+[ext_resource type="Texture2D" uid="uid://jxh6vxmtfx38" path="res://icon.svg" id="2_3igvv"]
+
+[node name="Secondary" type="Node2D"]
+script = ExtResource("1_sk6ev")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_3igvv")
+centered = false
+
+[node name="ModifySpeed" type="ModifySpeed" parent="."]

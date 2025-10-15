@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://de66q5uopftjm"]
+
+[ext_resource type="Texture2D" uid="uid://jxh6vxmtfx38" path="res://icon.svg" id="1_rjifa"]
+[ext_resource type="Script" path="res://Scripts/node.gd" id="2_osby7"]
+
+[node name="Main" type="KeyInput"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_rjifa")
+centered = false
+
+[node name="Node" type="Node" parent="."]
+script = ExtResource("2_osby7")
