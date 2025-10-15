@@ -19,6 +19,7 @@ namespace godot{
 		KeyInput();
 		~KeyInput();
 
+		void _init();
 		void _process(double delta) override;
 		void move(Vector2 direction);
 

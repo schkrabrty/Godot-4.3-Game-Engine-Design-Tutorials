@@ -1,0 +1,134 @@
+[gd_scene load_steps=12 format=3 uid="uid://w8wmgqmgd1eq"]
+
+[ext_resource type="Script" path="res://Scripts/Player_RigidBody_2D.gd" id="1_dwlvq"]
+[ext_resource type="Texture2D" uid="uid://jxh6vxmtfx38" path="res://icon.svg" id="2_t750w"]
+[ext_resource type="Script" path="res://Scripts/surface_friction_UI.gd" id="3_1oh0r"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hnksb"]
+size = Vector2(20, 670)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_6jr87"]
+size = Vector2(1173, 20)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_jgkuv"]
+size = Vector2(1172, 20)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_queq2"]
+size = Vector2(20, 669)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ymk60"]
+size = Vector2(64, 64)
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_let1w"]
+friction = 0.5
+bounce = 0.3
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_jtr4o"]
+size = Vector2(1170, 20)
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_vr6hh"]
+
+[node name="Node" type="Node"]
+
+[node name="Borders" type="Node" parent="."]
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Borders"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Borders/StaticBody2D"]
+position = Vector2(-10, 325)
+shape = SubResource("RectangleShape2D_hnksb")
+
+[node name="StaticBody2D2" type="StaticBody2D" parent="Borders"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Borders/StaticBody2D2"]
+position = Vector2(576.5, -10)
+shape = SubResource("RectangleShape2D_6jr87")
+
+[node name="StaticBody2D3" type="StaticBody2D" parent="Borders"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Borders/StaticBody2D3"]
+position = Vector2(576, 658)
+shape = SubResource("RectangleShape2D_jgkuv")
+
+[node name="StaticBody2D4" type="StaticBody2D" parent="Borders"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Borders/StaticBody2D4"]
+position = Vector2(1163, 324.5)
+shape = SubResource("RectangleShape2D_queq2")
+
+[node name="Player" type="RigidBody2D" parent="."]
+script = ExtResource("1_dwlvq")
+move_force = 500.0
+isLeft = true
+
+[node name="Sprite2D" type="Sprite2D" parent="Player"]
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("2_t750w")
+centered = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
+position = Vector2(32, 32)
+shape = SubResource("RectangleShape2D_ymk60")
+
+[node name="CustomPlatform" type="CustomPlatform" parent="."]
+physics_material_override = SubResource("PhysicsMaterial_let1w")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CustomPlatform"]
+position = Vector2(576, 589)
+shape = SubResource("RectangleShape2D_jtr4o")
+
+[node name="Sprite2D" type="Sprite2D" parent="CustomPlatform/CollisionShape2D"]
+modulate = Color(0.515944, 0.575511, 0.482476, 1)
+position = Vector2(1.49993, 26.5)
+scale = Vector2(1165, 70.9999)
+texture = SubResource("CanvasTexture_vr6hh")
+
+[node name="Panel" type="Panel" parent="."]
+offset_left = 900.0
+offset_top = 15.0
+offset_right = 1073.0
+offset_bottom = 140.0
+script = ExtResource("3_1oh0r")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Panel/VBoxContainer"]
+layout_mode = 2
+
+[node name="FrictionLabel" type="Label" parent="Panel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Friction"
+
+[node name="FrictionSlider" type="HSlider" parent="Panel/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+min_value = 0.1
+max_value = 1.0
+step = 0.01
+value = 0.1
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Panel/VBoxContainer"]
+layout_mode = 2
+
+[node name="BounceLabel" type="Label" parent="Panel/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+text = "Bounce"
+
+[node name="BounceSlider" type="HSlider" parent="Panel/VBoxContainer/HBoxContainer2"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+min_value = 0.1
+max_value = 1.0
+step = 0.01
+value = 0.5
+
+[node name="RoughCheckButton" type="CheckButton" parent="Panel/VBoxContainer"]
+layout_mode = 2
+text = "Rough"
+
+[node name="AbsorvantCheckButton" type="CheckButton" parent="Panel/VBoxContainer"]
+layout_mode = 2
+text = "Absorvant"

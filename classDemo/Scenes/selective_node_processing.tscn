@@ -1,0 +1,106 @@
+[gd_scene load_steps=7 format=3 uid="uid://bnme66qjrgnf7"]
+
+[ext_resource type="PackedScene" uid="uid://biydjhps3la5i" path="res://Scenes/rotating_coin.tscn" id="1_82elf"]
+[ext_resource type="PackedScene" uid="uid://bu8xxi0ukettr" path="res://Scenes/player.tscn" id="2_axnlt"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_qn2an"]
+size = Vector2(20, 670)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_sfrsw"]
+size = Vector2(1173, 20)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_tbi0h"]
+size = Vector2(1172, 20)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_doaeu"]
+size = Vector2(20, 669)
+
+[node name="Selective Node Processing" type="Node2D"]
+
+[node name="Player" parent="." instance=ExtResource("2_axnlt")]
+position = Vector2(521, 273)
+
+[node name="CoinsController" type="CoinsController" parent="."]
+
+[node name="Coin1" parent="CoinsController" instance=ExtResource("1_82elf")]
+position = Vector2(159, 561)
+
+[node name="Coin11" parent="CoinsController" instance=ExtResource("1_82elf")]
+position = Vector2(391, 560)
+
+[node name="Coin12" parent="CoinsController" instance=ExtResource("1_82elf")]
+position = Vector2(833, 555)
+
+[node name="Coin13" parent="CoinsController" instance=ExtResource("1_82elf")]
+position = Vector2(624, 556)
+
+[node name="Coin14" parent="CoinsController" instance=ExtResource("1_82elf")]
+position = Vector2(247, 264)
+
+[node name="Coin15" parent="CoinsController" instance=ExtResource("1_82elf")]
+position = Vector2(368, 135)
+
+[node name="Coin16" parent="CoinsController" instance=ExtResource("1_82elf")]
+position = Vector2(694, 131)
+
+[node name="Coin17" parent="CoinsController" instance=ExtResource("1_82elf")]
+position = Vector2(830, 283)
+
+[node name="Coin18" parent="CoinsController" instance=ExtResource("1_82elf")]
+position = Vector2(732, 456)
+
+[node name="Coin19" parent="CoinsController" instance=ExtResource("1_82elf")]
+position = Vector2(364, 447)
+
+[node name="Coin2" parent="CoinsController" instance=ExtResource("1_82elf")]
+position = Vector2(33, 451)
+
+[node name="Coin3" parent="CoinsController" instance=ExtResource("1_82elf")]
+position = Vector2(13, 283)
+
+[node name="Coin4" parent="CoinsController" instance=ExtResource("1_82elf")]
+position = Vector2(32, 109)
+
+[node name="Coin5" parent="CoinsController" instance=ExtResource("1_82elf")]
+position = Vector2(225, 18)
+
+[node name="Coin6" parent="CoinsController" instance=ExtResource("1_82elf")]
+position = Vector2(485, 18)
+
+[node name="Coin7" parent="CoinsController" instance=ExtResource("1_82elf")]
+position = Vector2(736, 21)
+
+[node name="Coin8" parent="CoinsController" instance=ExtResource("1_82elf")]
+position = Vector2(1016, 83)
+
+[node name="Coin9" parent="CoinsController" instance=ExtResource("1_82elf")]
+position = Vector2(1066, 306)
+
+[node name="Coin10" parent="CoinsController" instance=ExtResource("1_82elf")]
+position = Vector2(1004, 542)
+
+[node name="Borders" type="Node" parent="."]
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Borders"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Borders/StaticBody2D"]
+position = Vector2(-10, 325)
+shape = SubResource("RectangleShape2D_qn2an")
+
+[node name="StaticBody2D2" type="StaticBody2D" parent="Borders"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Borders/StaticBody2D2"]
+position = Vector2(576.5, -10)
+shape = SubResource("RectangleShape2D_sfrsw")
+
+[node name="StaticBody2D3" type="StaticBody2D" parent="Borders"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Borders/StaticBody2D3"]
+position = Vector2(576, 658)
+shape = SubResource("RectangleShape2D_tbi0h")
+
+[node name="StaticBody2D4" type="StaticBody2D" parent="Borders"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Borders/StaticBody2D4"]
+position = Vector2(1163, 324.5)
+shape = SubResource("RectangleShape2D_doaeu")
