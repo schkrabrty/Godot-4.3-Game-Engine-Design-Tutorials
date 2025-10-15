@@ -1,0 +1,77 @@
+[gd_scene load_steps=9 format=3 uid="uid://ctgska5hfxq8d"]
+
+[ext_resource type="Script" path="res://Scripts/Player_RigidBody_2D.gd" id="1_rego3"]
+[ext_resource type="Texture2D" uid="uid://jxh6vxmtfx38" path="res://icon.svg" id="2_ha3y4"]
+[ext_resource type="Texture2D" uid="uid://rtyxxwn5iduw" path="res://Images/Enemy.png" id="3_auf3h"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hnksb"]
+size = Vector2(20, 670)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_6jr87"]
+size = Vector2(1173, 20)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_jgkuv"]
+size = Vector2(1172, 20)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_queq2"]
+size = Vector2(20, 669)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_fawhm"]
+size = Vector2(128, 128)
+
+[node name="Node" type="Node"]
+
+[node name="Borders" type="Node" parent="."]
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Borders"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Borders/StaticBody2D"]
+position = Vector2(-10, 325)
+shape = SubResource("RectangleShape2D_hnksb")
+
+[node name="StaticBody2D2" type="StaticBody2D" parent="Borders"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Borders/StaticBody2D2"]
+position = Vector2(576.5, -10)
+shape = SubResource("RectangleShape2D_6jr87")
+
+[node name="StaticBody2D3" type="StaticBody2D" parent="Borders"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Borders/StaticBody2D3"]
+position = Vector2(576, 658)
+shape = SubResource("RectangleShape2D_jgkuv")
+
+[node name="StaticBody2D4" type="StaticBody2D" parent="Borders"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Borders/StaticBody2D4"]
+position = Vector2(1163, 324.5)
+shape = SubResource("RectangleShape2D_queq2")
+
+[node name="RigidBody2D" type="RigidBody2D" parent="."]
+gravity_scale = 0.0
+script = ExtResource("1_rego3")
+isLeft = true
+
+[node name="Sprite2D" type="Sprite2D" parent="RigidBody2D"]
+texture = ExtResource("2_ha3y4")
+centered = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RigidBody2D"]
+position = Vector2(64, 64)
+shape = SubResource("RectangleShape2D_fawhm")
+
+[node name="RigidBody2D2" type="RigidBody2D" parent="."]
+position = Vector2(1024, 0)
+gravity_scale = 0.0
+script = ExtResource("1_rego3")
+
+[node name="Sprite2D" type="Sprite2D" parent="RigidBody2D2"]
+scale = Vector2(0.032, 0.032)
+texture = ExtResource("3_auf3h")
+centered = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RigidBody2D2"]
+position = Vector2(64, 64)
+shape = SubResource("RectangleShape2D_fawhm")
+
+[node name="MagneticConstraint" type="MagneticConstraint" parent="."]

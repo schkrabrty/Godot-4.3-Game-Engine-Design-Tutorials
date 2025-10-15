@@ -2,6 +2,9 @@
 import os
 import sys
 
+if "ANDROID_HOME" not in os.environ:
+    os.environ["ANDROID_HOME"] = "/Users/soumyajitchakraborty/Library/Android/sdk"
+
 env = SConscript("godot-cpp/SConstruct")
 
 # For reference:

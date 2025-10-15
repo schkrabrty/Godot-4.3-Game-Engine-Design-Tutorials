@@ -1,0 +1,25 @@
+[gd_scene load_steps=5 format=3 uid="uid://ckkvfjvp5er1l"]
+
+[ext_resource type="Script" path="res://Scripts/simple_gun.gd" id="1_ye8hb"]
+[ext_resource type="PackedScene" uid="uid://by7b4t7jxgusw" path="res://Scenes/bullet.tscn" id="2_fin2u"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7vlhd"]
+albedo_color = Color(0.240032, 0.0227196, 0, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_3avgf"]
+material = SubResource("StandardMaterial3D_7vlhd")
+
+[node name="SimpleGun" type="Node3D"]
+script = ExtResource("1_ye8hb")
+bullet_scene = ExtResource("2_fin2u")
+
+[node name="Barrel" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.8, 0, 0, -0.146032)
+mesh = SubResource("BoxMesh_3avgf")
+
+[node name="Muzzle" type="Node3D" parent="Barrel"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.523522)
+
+[node name="Holder" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.2, 0, 0, 0, 0.0684368, -0.375853, 0, 0.187927, 0.136874, 0, -0.195156, 0.191869)
+mesh = SubResource("BoxMesh_3avgf")

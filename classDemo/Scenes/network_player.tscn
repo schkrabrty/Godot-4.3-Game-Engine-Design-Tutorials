@@ -1,0 +1,60 @@
+[gd_scene load_steps=9 format=3 uid="uid://1nvnnpyjdamy"]
+
+[ext_resource type="Script" path="res://Scripts/player_for_network_demo.gd" id="1_dqaoa"]
+[ext_resource type="PackedScene" uid="uid://ckkvfjvp5er1l" path="res://Scenes/simple_gun.tscn" id="2_u3u3u"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_np3yf"]
+albedo_color = Color(0.927255, 0.260801, 0.155683, 1)
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_nwof5"]
+material = SubResource("StandardMaterial3D_np3yf")
+
+[sub_resource type="SphereMesh" id="SphereMesh_cjy1k"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_n30nn"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_tw1vn"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_17dpk"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+
+[node name="Player" type="CharacterBody3D"]
+script = ExtResource("1_dqaoa")
+
+[node name="BodyMesh" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+mesh = SubResource("CapsuleMesh_nwof5")
+
+[node name="LeftEye" type="MeshInstance3D" parent="BodyMesh"]
+transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, -0.2, 0.5, -0.45)
+mesh = SubResource("SphereMesh_cjy1k")
+
+[node name="RightEye" type="MeshInstance3D" parent="BodyMesh"]
+transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0.2, 0.5, -0.45)
+mesh = SubResource("SphereMesh_n30nn")
+skeleton = NodePath("../LeftEye")
+
+[node name="BodyCollider" type="CollisionShape3D" parent="."]
+transform = Transform3D(1.1, 0, 0, 0, 1, 0, 0, 0, 1.1, 0, 1, 0)
+shape = SubResource("CapsuleShape3D_tw1vn")
+
+[node name="CameraOrigin" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+
+[node name="SpringArm3D" type="SpringArm3D" parent="CameraOrigin"]
+spring_length = 2.0
+margin = 0.5
+
+[node name="Camera3D" type="Camera3D" parent="CameraOrigin/SpringArm3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2)
+
+[node name="SimpleGun" parent="." instance=ExtResource("2_u3u3u")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.652308, 1.40426, 0.0820053)
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_17dpk")

@@ -1,0 +1,33 @@
+[gd_scene load_steps=6 format=3 uid="uid://by7b4t7jxgusw"]
+
+[ext_resource type="Script" path="res://Scripts/bullet.gd" id="1_v1j88"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_r7cb1"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_u2udf"]
+albedo_color = Color(0, 0, 0, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_jl2dn"]
+material = SubResource("StandardMaterial3D_u2udf")
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_3cnf3"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+
+[node name="Bullet" type="RigidBody3D"]
+script = ExtResource("1_v1j88")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(0.05, 0, 0, 0, 0.05, 0, 0, 0, 0.05, 0, 0, 0)
+shape = SubResource("SphereShape3D_r7cb1")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0, 0)
+mesh = SubResource("SphereMesh_jl2dn")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_3cnf3")

@@ -1,7 +1,30 @@
 #include "register_types.h"
 
+// Headers for Assignment 1
 #include "keyinput.h"
 #include "modifyspeed.h"
+
+// Headers for Assignment 2
+#include "enhanced_input_handling.h"
+#include "coinscontroller.h"
+#include "custom_frame_rate_handling.h"
+
+// Headers for Assignment 3
+#include "magnetic_constraint.h"
+#include "magnetic_constraint_3d.h"
+#include "collision_response_controller.h"
+#include "custom_platform.h"
+#include "wind_2d.h"
+#include "custom_gravity_body_2d.h"
+
+// Headers for Assignment 4
+#include "ShinySpikyBallMaterial.h"
+
+// Headers for Networking Demo
+#include "MyNetworkNode.h"
+#include "MyCharacter.h"
+#include "BulletSpawner.h"
+#include "LifetimeRigidBody.h"
 
 #include <gdextension_interface.h>
 #include <godot_cpp/core/defs.hpp>
@@ -14,8 +37,31 @@ void initialize_example_module(ModuleInitializationLevel p_level) {
 		return;
 	}
 
+	// Register the custom classes for Assignment 1.
 	GDREGISTER_CLASS(KeyInput);
 	GDREGISTER_CLASS(ModifySpeed);
+
+	// Register the custom classes for Assignment 2.
+	GDREGISTER_CLASS(Enhanced_Input_Handling);
+	GDREGISTER_CLASS(CoinsController);
+	GDREGISTER_CLASS(CustomFrameRateHandling);
+
+	// Register the custom classes for Assignment 3.
+	GDREGISTER_CLASS(MagneticConstraint);
+	GDREGISTER_CLASS(MagneticConstraint3D);
+	GDREGISTER_CLASS(CollisionResponseController);
+	GDREGISTER_CLASS(CustomPlatform);
+	GDREGISTER_CLASS(WindArea2D);
+	GDREGISTER_CLASS(CustomGravityBody2D);
+
+	// Register the custom classes for Assignment 4.
+	GDREGISTER_CLASS(ShinySpikyBallMaterial);
+
+	// Register the custom classes for Networking Demo.
+	GDREGISTER_CLASS(MyNetworkNode);
+	GDREGISTER_CLASS(MyCharacter);
+	GDREGISTER_CLASS(BulletSpawner);
+	GDREGISTER_CLASS(LifetimeRigidBody);
 }
 
 void uninitialize_example_module(ModuleInitializationLevel p_level) {

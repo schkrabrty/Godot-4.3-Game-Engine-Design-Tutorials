@@ -1,0 +1,45 @@
+[gd_scene load_steps=6 format=3 uid="uid://28t2yq7apf72"]
+
+[ext_resource type="PackedScene" uid="uid://bu8xxi0ukettr" path="res://Scenes/player.tscn" id="1_reafo"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_vxsp7"]
+size = Vector2(20, 670)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_3bp0t"]
+size = Vector2(1173, 20)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ia711"]
+size = Vector2(1172, 20)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_p0it3"]
+size = Vector2(20, 669)
+
+[node name="Player" instance=ExtResource("1_reafo")]
+
+[node name="Enhanced_Input_Handling" type="Enhanced_Input_Handling" parent="." index="2"]
+
+[node name="Borders" type="Node" parent="." index="3"]
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Borders" index="0"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Borders/StaticBody2D" index="0"]
+position = Vector2(-10, 325)
+shape = SubResource("RectangleShape2D_vxsp7")
+
+[node name="StaticBody2D2" type="StaticBody2D" parent="Borders" index="1"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Borders/StaticBody2D2" index="0"]
+position = Vector2(576.5, -10)
+shape = SubResource("RectangleShape2D_3bp0t")
+
+[node name="StaticBody2D3" type="StaticBody2D" parent="Borders" index="2"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Borders/StaticBody2D3" index="0"]
+position = Vector2(576, 658)
+shape = SubResource("RectangleShape2D_ia711")
+
+[node name="StaticBody2D4" type="StaticBody2D" parent="Borders" index="3"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Borders/StaticBody2D4" index="0"]
+position = Vector2(1163, 324.5)
+shape = SubResource("RectangleShape2D_p0it3")

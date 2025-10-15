@@ -1,0 +1,128 @@
+[gd_scene load_steps=13 format=3 uid="uid://o2g4wvnwmrwi"]
+
+[ext_resource type="Script" path="res://Scripts/main_xr.gd" id="1_6dyva"]
+[ext_resource type="PackedScene" uid="uid://b68td1vg3xmhi" path="res://Scenes/xr_Player.tscn" id="2_moohx"]
+[ext_resource type="PackedScene" uid="uid://r7ew66lmbfq2" path="res://Scenes/pickable_box.tscn" id="3_dha4p"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_fhfkt"]
+sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+
+[sub_resource type="Sky" id="Sky_wpsto"]
+sky_material = SubResource("ProceduralSkyMaterial_fhfkt")
+
+[sub_resource type="Environment" id="Environment_6acqc"]
+background_mode = 2
+sky = SubResource("Sky_wpsto")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_h2478"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_45fpd"]
+size = Vector2(20, 20)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_n3skm"]
+size = Vector3(4, 1, 0.5)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_38m4c"]
+albedo_color = Color(0.210087, 0.4538, 0.539723, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_w5pxf"]
+material = SubResource("StandardMaterial3D_38m4c")
+size = Vector3(4, 1, 0.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ostjb"]
+size = Vector3(20.2529, 6.04279, 1)
+
+[node name="Main" type="Node3D"]
+script = ExtResource("1_6dyva")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_6acqc")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.996493, 0.0724672, -0.0418389, 0, 0.5, 0.866025, 0.0836779, 0.862988, -0.498246, 0, 0, 0)
+shadow_enabled = true
+
+[node name="Player" parent="." instance=ExtResource("2_moohx")]
+
+[node name="Ground" type="StaticBody3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Ground"]
+shape = SubResource("WorldBoundaryShape3D_h2478")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Ground"]
+mesh = SubResource("PlaneMesh_45fpd")
+
+[node name="Table" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -0.53)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Table"]
+shape = SubResource("BoxShape3D_n3skm")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Table"]
+mesh = SubResource("BoxMesh_w5pxf")
+
+[node name="PickableObject" parent="." instance=ExtResource("3_dha4p")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.122111, 1.1, -0.424428)
+
+[node name="PickableObject2" parent="." instance=ExtResource("3_dha4p")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.315012, 1.1, -0.424428)
+
+[node name="PickableObject3" parent="." instance=ExtResource("3_dha4p")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.091391, 1.1, -0.424428)
+
+[node name="PickableObject4" parent="." instance=ExtResource("3_dha4p")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.288022, 1.1, -0.424428)
+
+[node name="PickableObject5" parent="." instance=ExtResource("3_dha4p")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.661603, 1.1, -0.424428)
+
+[node name="PickableObject6" parent="." instance=ExtResource("3_dha4p")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.468702, 1.1, -0.424428)
+
+[node name="PickableObject7" parent="." instance=ExtResource("3_dha4p")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.875105, 1.1, -0.424428)
+
+[node name="PickableObject8" parent="." instance=ExtResource("3_dha4p")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.07174, 1.1, -0.424428)
+
+[node name="PickableObject9" parent="." instance=ExtResource("3_dha4p")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.918724, 1.1, -0.424428)
+
+[node name="PickableObject10" parent="." instance=ExtResource("3_dha4p")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.11162, 1.1, -0.424428)
+
+[node name="PickableObject11" parent="." instance=ExtResource("3_dha4p")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.705222, 1.1, -0.424428)
+
+[node name="PickableObject12" parent="." instance=ExtResource("3_dha4p")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.50859, 1.1, -0.424428)
+
+[node name="FrontWall" type="StaticBody3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="FrontWall"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.171554, 2.51479, -9.9934)
+shape = SubResource("BoxShape3D_ostjb")
+
+[node name="LeftWall" type="StaticBody3D" parent="."]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="LeftWall"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.171554, 2.51479, -9.9934)
+shape = SubResource("BoxShape3D_ostjb")
+
+[node name="RightWall" type="StaticBody3D" parent="."]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 0, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RightWall"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.171554, 2.51479, -9.9934)
+shape = SubResource("BoxShape3D_ostjb")
+
+[node name="BackWall" type="StaticBody3D" parent="."]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="BackWall"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.171554, 2.51479, -9.9934)
+shape = SubResource("BoxShape3D_ostjb")
