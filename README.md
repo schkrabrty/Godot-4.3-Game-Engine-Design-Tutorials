@@ -1,4 +1,4 @@
-# Soumya-Class-Demo
+# Godot-4.3-Game-Engine-Design-Tutorials
 
 ## Steps to setup the project on your computer
 First, clone this project in your computer. Before opening up this project using Visual Studio Code, make sure to install Python, Scons, Cmake, LLVM in your computer. For Windows operating system, install Clang along with the previous packages. The installation procedure for Windows and Mac/Linux will be slightly different. I will go through them below.
