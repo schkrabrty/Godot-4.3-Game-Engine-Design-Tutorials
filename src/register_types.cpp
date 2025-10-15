@@ -2,6 +2,9 @@
 
 #include "keyinput.h"
 #include "modifyspeed.h"
+#include "enhanced_input_handling.h"
+#include "coinscontroller.h"
+#include "custom_frame_rate_handling.h"
 
 #include <gdextension_interface.h>
 #include <godot_cpp/core/defs.hpp>
@@ -16,6 +19,9 @@ void initialize_example_module(ModuleInitializationLevel p_level) {
 
 	GDREGISTER_CLASS(KeyInput);
 	GDREGISTER_CLASS(ModifySpeed);
+	GDREGISTER_CLASS(Enhanced_Input_Handling);
+	GDREGISTER_CLASS(CoinsController);
+	GDREGISTER_CLASS(CustomFrameRateHandling);
 }
 
 void uninitialize_example_module(ModuleInitializationLevel p_level) {

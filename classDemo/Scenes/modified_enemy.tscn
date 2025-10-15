@@ -1,0 +1,25 @@
+[gd_scene load_steps=4 format=3 uid="uid://dmpmk6dullwl8"]
+
+[ext_resource type="Script" path="res://Scripts/modified_enemy.gd" id="1_5f6pj"]
+[ext_resource type="Texture2D" uid="uid://rtyxxwn5iduw" path="res://Images/Enemy.png" id="1_g01ux"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bakq4"]
+size = Vector2(80, 62)
+
+[node name="Modified_Enemy" type="Area2D"]
+script = ExtResource("1_5f6pj")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.02, 0.02)
+texture = ExtResource("1_g01ux")
+centered = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(40, 43)
+shape = SubResource("RectangleShape2D_bakq4")
+
+[node name="Timer" type="Timer" parent="."]
+
+[node name="CustomFrameRateHandling" type="CustomFrameRateHandling" parent="Timer"]
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

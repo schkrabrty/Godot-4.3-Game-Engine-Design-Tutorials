@@ -1,236 +1,43 @@
 # Soumya-Class-Demo
 
-## Steps to setup the project on your computer
-First, clone this project in your computer. Before opening up this project using Visual Studio Code, make sure to install Python, Scons, Cmake, LLVM in your computer. For Windows operating system, install Clang along with the previous packages. The installation procedure for Windows and Mac/Linux will be slightly different. I will go through them below.
+In this tutorial, I will show you three examples of `Selective Node Processing`, `Enhanced Input Handling`, and `Custom Frame Rate Handling`. Let's start to discuss about them in the following sections. 
 
-## Setup for Windows
-At first download and install the latest version of "Python" on your computer. **_When the setup file will load, do not hit install immediately! Rather, check the box called "Add Python.exe to PATH" (shown in the picture below)._**
+## Selective Node Processing
+While playing various games, often you may have seen that similar looking enemies are kind of stuck at or basically doing nothing who are very far from you. However, the same enemies can attack you when you are closer to them. Or, the enemies are wandering around on their own. Now, you throw a rock in front of let's say two or three enemies. You can see that only those two or three enemies who are closer to the area will come closer to the rock to investigate it even though there are multiple enemies in the scene wandering around. These scenarios can be some examples of `selective node processing`. If all the enemies start to do their desired jobs at the same time, it can be hard for the game loop to manage all the nodes properly, which can degrade performance. So, by `selective node processing` the game loop can select only those enemies who are closer to the player or to the thrown rock area, to do their jobs. The other enemies will not be activated. We will implement a similar feature in the tutorial. 
 
-![Python installation setup](/Images%20for%20Readme/Python%20Installation.PNG)
+At first, you will see in the `classDemo` Godot project folder, I have created a `character_body_2d.gd` script which represents the player in the game. It is just a simple player which is able to collide with other objects. Also, ot can move based on the WASD or the arrow keys. You can also, see a `rotating_coins.gd` script. This script is attached to a coin node which is an Area2D node. This script simply allow the coin to rotate based on an animation that I played in the `_ready()` method. These scripts are attached to the corresponding nodes in the `player.tscn` and the `rotating_coin.tscn` scenes. Next, I simply created another scene called `selective_node_processing.tscn` where I created a bunch of rotating coins and I also added the player in the scene. If you simply play the game now, you will be able to collide with and destroy the coins as expected based on the logic written in the scripts mentioned before. However, you can see that all coins are rotating irrespective of the distance of each coin from the player. We will fix this issue by implementing a C++ GDExtension node so that it will simply detect each rotating coin's distance from the player in every frame. If it is within a certain distance from the player, the coin(s) will be rotated. Otherwise, they will remain static. 
 
-Once Python is installed, open Command Prompt, and install the packages one by one, as shown below.
+You can find a cpp file in the `src` folder of the repository called `coinscontroller.cpp`, where this logic is written. The basic idea is that all the coins will be the child of this C++ node so that it can find all the coins through looping. Next, it will find the `Player` node from the scene tree and get it's global position. We will not use the local position of the `Player` node because it can be a child of some other nodes. In that case, using local position of the `Player` node will give us totally different results because within the parent node, the `Player` node can move differently. So, using global position will give us its global location which will be free of any interdependence between its parents. Next, we will loop over through each child coin. We will get its global position also. Finally, we will check if the distance between the global position of the `Player` and the specific child node is lesser than a certain arbitrary value (in this example, it is set to 300), then the rotating coin animation will be player. Otherwise, the rotating animation will not be played for the coin and also the attached sprite will show the first frame of the rotating animation to represent a static coin. This logic is written in the `_process()` method so that the Game Loop will run this logic in every frame. Now, you can open the `selective_node_processing.tscn` scene in Godot to see the outcome of the newly written script. I added the C++ node as the parent of all the coins. Now, right click on the `selective_node_processing.tscn` tab and select `Play This Scene` and you will be able to see the magic! Based on your player movement and its distance from the coins, the game loop will automatically turn on/off the coin rotations, which will increase the performance of the game theoretically. This video down below will show you the concept properly. 
 
-`pip install cmake`
+[![A demo video showing the difference between when the selective node processing is turned on compared to turn off in the game loop](/Images%20for%20Readme/Selective%20Node%20Handling%20Thumbnail.png)](https://www.youtube.com/watch?v=ftp79gxx_Ms)
 
-`pip install scons`
+## Enhanced Input Handling
+It is quite common in games when you want to sprint, you press multiple key combinations such as Shift + movement keys. This is an example of `Enhanced Input Handling` in games. In Godot, you can definitely create different input actions and map your keyboard, mouse, joystick inputs in it. However, often times, you need to use multiple key combinations, which you cannot directly do by calling the input actions directly. You need to write some code to determine the key combinations in your game. We will do this in this example. 
 
-`pip install clang`
+In the `src` folder, you will find the `enhanced_input_handling.cpp` file, where the relevant logic is written. So, what we want to do is, I want to increase the `speed` of the `Player` node (mentioned in the `Selective Node Processing` section) when the `Shift` key and any of the `movement keys` (such as the `WASD` keys or the `Arrow` keys) aare pressed continuously. When the `Shift` key is released, the `speed` of the `Player` node will return back to its original value. The `speed` variable is accessed from the `character_body_2d.gd` script that is attached to the `Player` node. Because we will add this C++ node as a child of the `Player` node, we have accessed the `Player` node in the `_ready()` method first in the C++ script. Also, we accessed the `speed` variable from the GDscript so that we can play with it later. 
 
-`pip install make`
+The main magic happens in the `_input()` method. This is the main method that triggers automatically when there is an input event. To determine, which keys are pressed, we will call the `get_keycode()` method. We can also understand if the key is pressed by calling the `is_pressed()` method. Now, we simply need to check if two keys i.e., `Key::KEY_UP` (or the `Up Arrow Key`) and the `Key::KEY_SHIFT` (or the `Shift Key`) are pressed for example, then the `speed` will be increased to 1000. Otherwise, the `speed` will remain as its original value. As the `speed` variable is defined in the GDscript attached to the `Player` node, we simply need to call the `set()` method to update its value. We run the `_input()` method only once by checking if the input is not repeating in every frame by calling the `!is_echo()` method. In this example, the `_input()` method is called only when a pressed button is released, or a released button is pressed for the first time. If you want to detect continuous pressing event, you can play with the `is_echo()` method. 
 
-`pip install ninja`
+After compiling this C++ node, I added this node as a child of the `Player` node in the `enhanced_input_handling.tscn` scene. If you play the game, you will be able to see the speed increment and decrement based on the pressing and releasing of the key combinations that we have just discussed earlier. A small demo video of this tutorial is shown below for better understanding the concept properly. 
 
-Once these packages are installed, go to [this link](https://github.com/llvm/llvm-project/releases/tag/llvmorg-18.1.8) and find the "LLVM-18.1.8-win64.exe". LLVM stands for Low Level Virtual Machines which is a collection of tools and libraries for building compilers, debuggers, and other software development tools. The 18.1.8 version of LLVM is the latest version now. In future, this version can change. So, feel free to tweak the hyperlink to get the latest version if needed. Once you find the exe file, click on it, and it will be downloaded to your computer. Feel free to install it. **_Make sure that you choose the PATH before you install the package (shown in the picture below)._**
+[![A demo video showing the increment of the speed of the node when two buttons are pressed continuously to demonstrate enhanced input handling in the game loop](/Images%20for%20Readme/Enhanced%20Input%20Handling%20Thumbnail.png)](https://www.youtube.com/watch?v=5bBzXtGgbsM)
 
-![LLVM Installation](/Images%20for%20Readme/LLVM.PNG)
+## Custom Frame Rate Handling
+While developing a game, most of your code goes into the `_process()` method because the game loop executes this method in every frame, and that's how you can interact in the scene. Now, the frame rate can vary from one monitor to the other. The `delta` variable of the `_physics()` method considers the current monitor's refresh rate. So, it means if you play your game on a 60 Hz Refresh Rate monitor, the value of the `delta` will be (1 / 60) = 0.0167 seconds, whereas if you play the same game on a 145 Hz Refresh Rate monitor, the value of the `delta` variable will be (1 / 145) = 0.0069 seconds. This can be a problem because the player's or other enemies' movements may vary because of the monitor's refresh rate. You may not want this to happen in the game. So, you need a fixed frame rate so that every user of your game will be able to get the same experience. To do that, you can use the `_physics_process()` method in Godot, where you can specify the time of each frame so that you know it for sure that every frame will take the same time to execute the code written inside this method. You can go to `Project` option in the Menu bar and select `Project Settings` from the dropdown menu. Next, you can scroll down to the `Physics` section under the `General` tab in the opened window. Click on `Common` under the `Physics` section, and change the `Physics Ticks per Second` variable to your desired Frames Per Second (FPS) value. By default it is 60 to represent that the physics engine runs at 60 FPS in Godot. You can change the value to 20 or 120 to indicate that the physics engine will run at 20 FPS or 120 FPS. In this way, you can synchronize your frame updates for all computers regardless of their refresh rate. 
 
-Now, most of the required packages are installed. Now, go to Visual Studio Code and follow the steps in the **Common** section below.
+Even though it is okay to set the FPS value in the `Physics` settings of Godot, it will basically force all of your `_physics_process()` updates to be synchronized across your game. In some cases, it is good. However, in some cases, you may not want all of your nodes to run at fixed FPS that you set in your `Physics` settings. For example, you may want some enemies to move slower than other, and vice versa. There can be definitely other scenarios also, but I am considering this example, because it is easier to understand. Now, one easy way to solve the problem is you can multiply the `delta` variable of the `_physics_process()` method with a `speed` variable, which you can change based on your own needs. So, for a slower enemy, you can assign a small value to the `speed` variable and for a faster enemy, a larger value can be assigned to the `speed` variable. This is one way to solve the problem. However, we need to remember that all the enemies are still running at the same FPS that you set earlier in the `Physics` settings of your Godot game engine. So, how can you run the enemies at different FPS? That's what we will do in this tutorial. 
 
-***NOTE:*** If you still find some error while executing the "scons" command (mentioned below), that may say that the compiler cannot find some ".o" files, then it is most likely that Visual Studio Code requires a g++ compiler. So, in that case, you need to download and install [the MSYS2 package](https://www.msys2.org/) on your computer. Please check the "Run MSYS2" checkbox when the installation is finished, and then finish the installation procedure. Once you do that, then run the command below in the newly opened command prompt - 
+In the `classDemo` Godot project folder, go to the `Scripts` folder where you can find two Gdscripts called `enemy.gd` and `modified_enemy.gd`. The `enemy.gd` script is attached to the `Enemy` Area2D node in the `enemy.tscn` scene. The `modified_enemy.gd` script is attached to the `Modified_Enemy` Area2D node in the `modified_enemy.tscn` scene. Both nodes simply oscillates from top to bottom of the
+screen. The movement mechanism will be different for these two nodes. Both of them are Area2D nodes. If the `Player` node (mentioned earlier) collides with these nodes, the `Player` will die and a message "You died!" will be shown on the screen. However, if the `Player` crosses the barriers of these oscillating enemies and touch the right screen, the `Player` will win and a message "You Won!" will be shown on the screen. This mechanism can be found in the `custom_frame_rate_handling.tscn` scene where you can see multiple enemies along with the `Player` node. The first enemy from the left side of the screen is the `Enemy` node that we just discussed earlier. All the other enemies are `Modified_Enemy` nodes where each of these nodes runs at different FPS. To be more specific, these `Modified_Enemy` nodes run at 20, 40, 60, 60, and 100 FPS from left to right in the scene. So, let's discuss a bit about the code now. 
 
-`pacman -S mingw-w64-x86_64-gcc`
+The `enemy.gd` script considers the `_process()` method for frame update mechanism. It means that the `delta` variable of this node is variable depending on the Monitor's refresh rate. I have multiplied a `speed` variable with the `delta` variable to increase the speed of the enemy a bit. The important thing to note that the speed of this enemy can vary based on the monitor's refresh rate. Now, in the `modified_enemy.gd` script, I declared some public variables which we can access from our C++ script where we will define our custom logic to implement specific FPS for the `Modified_Enemy` node. In the `src` folder, you can find the C++ script called `custom_frame_rate_handling.cpp`, which contains this custom logic. The main idea of this logic is that we need to turn on a timer that will run for a specific time. Once, it finishes running for that time, it will again restart itself and runs for the same time. This process will go on forever. For example, if we want to run the `Modified_Enemy` at 80 FPS, then the execution time of each frame will be (1 / 80) = 0.0125 seconds. So, the timer, will run the logic for this time, resets itself, and restart the logic execution for another 0.0125 seconds, and go on and on. We need to create a signal called `_on_timer_timeout()` in the C++ script which we need to connect to the `timeout()` signal in Godot so that the timer runs forever. In short, we basically need to write a similar logic that we wrote in the `_process()` method of the `enemy.gd` script in the `_on_timer_timeout()` method of our newly created C++ file so that the enemy can oscillate from top to bottom of the screen, but at fixed FPS. Because the `_process()` method gets each frame time value from the `delta` variable, we had to consider that value to move. However, in the `_on_timer_timeout()` method we do not need that because we need to simply tell the game engine, what should it do when the timer times out, i.e., move the enemy in certain direction by some distance after the timer times out. That's what is written in the logic in the C++ script. We also need to setup the timer before it starts executing the `_on_timer_timeout()` method continuously. These mechanisms can be found in the `_ready()` method. Once the code is compiled, we can add this C++ node as a child node of the `Modified_Enemy` node so that it can access the `modified_enemy.gd` script and also update the position of the `Modified_Enemy` node accordingly. 
 
-Finally, you need to add the MinGW bin dir to your system PATH, and then you will have a working g++ compiler. So, go to the "Settings" app of your computer. Search for "Path" in the search bar, and choose the option that says "Environment Variables" (shown in the picture below). 
+We need to add this C++ node as a child node of a Timer node in Godot because Godot wants the Timer to be added in the Scene Tree first rather than dynamically adding it from the C++ script. If you want to dynamically create a Timer node from the C++ script, you can definitely do that (which I did earlier), but it does not work properly. Godot cannot work with the generated Timer variable properly for some unknown reasons. So, it is better to create a Timer node first in the scene, and then add the C++ node as a child of the timer node. You can see that the C++ logic also reflects the same. If you go to the `modified_enemy.tscn` scene, you can see that a Timer is added and the new C++ node is added as a child node of the Timer node. So, this modified enemy is now setup properly to run at a fixed custom FPS. We can now call multiple such modified enemies in another scene. So, open the `custom_frame_rate_handling.tscn` scene where you can find multiple such modified enemies in the scene. 
 
-![Environment variable selection setting from the Settings App](/Images%20for%20Readme/Environment%20Variables%20Finder.png)
+In the `custom_frame_rate_handling.tscn` scene, you can see that all the `Modified_Enemy` nodes are children of the `Enemies` parent node. Click on each `Modified_Enemy` node, and you will see that the `Frame Rate` variable in the inspector window has different value to represent the FPS of the timer (i.e., 20, 40, 60, 80, and 100 in this case). There is also a `Speed Multiplier` variable in the inspector window also. This is just a speed multiplier by using which we can increase or decrease the speed of the `Modified_Enemy` nodes. For now, you can set it to 1 for all `Modified_Enemy` nodes. If you now run this scene by right clicking on the `custom_frame_rate_handling.tscn` tab and select `Play This Scene`, you will see that the `Enemy` node (i.e. the extreme left node which moves based on the `_process()` method), moves as expected with a `speed` = 100 value. The second node runs at a speed of 20 FPS. The third node runs at a speed of 40 FPS. The fourth node runs at 60 FPS. This is cool, right? So, we can allow different nodes to run at different constant FPS in our game. However, even though we have set the last two nodes' `Frame Rate` variable to 80 and 100, they do not run at those FPS. Instead they run at 60 FPS. Why is that? It is because Godot can synchronize the refresh rate of the monitor and the frame rate of your GPU properly till 60 Hz, and that's why you can easily change the FPS value of your new timer class lower than or equal to 60 FPS. However, if you want to get higher frame rates then, you need to go to the `Project > Project Settings > Physics > Common` in Godot, and increase the value of the `Physics Ticks per Second` variable to a higher number, say 120. Also, you need to scroll up to the `Display > Window` option in the same window (you can find these options on the left side of the opened window), and turn off `Vsync` by clicking on `Disabled`. `Vsync` allows synchronization between the GPU frame rate and the monitor's refresh rate. However, we need to turn it off so that we can run our custom timers with our desired FPS. 
 
-This will open a new window (shown in the picture below). From that window, choose the "Environment Variables" button. 
+Although, this can be one solution, but turning off the `Vsync` may not be a better solution because it stops synchronizing the frame rates between your monitor and the GPU. So, what can we do without turning off the `Vsync`? To solve it, you can see the `Speed Multiplier` variable in the `Modified_Enemy` nodes. For 20 FPS, 40 FPS, and 60 FPS, we will choose the value of the `Speed Multiplier` to 1 because the timer can run at that frame rate. For 80 and 100 FPS, we will choose the values of the `Speed Multiplier` to 1.33 and 1.667, so that the speed of those two nodes will be increased to represent those two FPS values. The `Speed Multiplier` value can be gotten by calculating (desired FPS / default FPS) value. In our case, the default FPS is 60, and for 80 FPS, the desired FPS is 80. So, the value will be (80 / 60) = 1.33, and for 100 FPS the value will be (100 / 60) = 1.667. We assigned these values to the `Speed Multiplier` variables. Now, if we run the game, we can see that all the nodes run at different fixed FPS values except the first `Enemy` node which runs based on a variable FPS. The video below will show you the concept properly. 
 
-![Environment variable button selection from the window](/Images%20for%20Readme/Environment%20Variables.PNG)
+[![A demo video showing several nodes running at different frame rate per second continuously to demonstrate custom frame rate handling in the game loop](/Images%20for%20Readme/Custom%20Frame%20Rate%20Handling%20Thumbnail.png)](https://www.youtube.com/watch?v=g5o6afcox1M)
 
-It will open another window (shown below). From there, select the "Path" variable, and then click on the "Edit" button. 
-
-![Path variable selection from the window](/Images%20for%20Readme/Path%20setup%201.PNG)
-
-This will open another window (shown below). In this window, click on "New" which will create an empty entry at the bottom of the list. Now click on "Browse" and go to the "mingw64/bin/" folder in your computer. Normally it should be located at "C:/msys64/mingw64/bin/". Once you select that, press "OK" and then the path will be shown up at the end of the list. Then click on "OK" to close the window. Then also, click on "OK" in the other opened windows to register the path properly in your system. 
-
-![Path variable final setup from the window](/Images%20for%20Readme/Path%20Setup%202.PNG)
-
-## Setup for MacOS or Linux
-I will suggest you to open this project using Visual Studio Code because it comes with a terminal window internally regardless of the OS that you are using. So, first you need to click on "Terminal" in the Menu Bar, and click on "New Terminal". Then in the terminal window, you need to install "Homebrew" if you have not installed already. The command is -
-
-`/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)”`
-
-Next, you need to install Python -
-
-`brew install python`
-
-Then you need to install Scons -
-
-`brew install scons`
-
-After that you need to install Cmake -
-
-`brew install cmake`
-
-Please also check if the command line tools are installed or not if you are using macOS. Simply type -
-
-`xcode-select --install`
-
-Based on the output print statement, you can understand if command line tools is installed in your computer or not.
-
-Theoretically, you should be done at this point. However, there can still be problems with the C++ compilers. So, to remain on the safe side, please install LLVM and GCC on your computer as well. The commands are -
-
-`brew install llvm`
-
-and
-
-`brew install gcc`
-
-Once you install all these packages through the Visual Studio Code Terminal, then you need to follow the steps mentioned in the **Common** section below.
-
-## Common for all Operating Systems
-
-Once you install all the packages, now you need to install some Extensions in Visual Studio Code. Click on the Extensions icon on the left side bar of your Visual Studio Code, and download these extensions one by one -
-
-`C#`,
-
-`C# Dev Kit`,
-
-`.NET Install Tool`,
-
-`.NET Extension Pack`,
-
-`C/C++`,
-
-`C/C++ Extension Pack`,
-
-`CMake Tools`,
-
-`Intellicode`,
-
-`Intellicode API Usage Examples`, and
-
-`Intellicode for C# Dev Kit`.
-
-Feel free to sign in with your Microsoft or GitHub Id in your Visual Studio Code and "Turn on Syncing", so that you do not have to do the Extension setups in your other computers. They will automatically be synchronized on your Visual Studio Code Editor once you sign in.
-
-Once all of your Extensions are downloaded, you will see that there will be multiple tabs opened up in the editor. Find the tab that shows the C# Dev Kit installation procedure. If you cannot find it, you can also click on File > New Window, and from there you can select the setup procedure for C# Dev Kit which will show up as a link on the right hand side of the window (It will be shown something like - "Get Started with C# Dev Kit"), shown in the picture below.
-
-![C# Dev Kit Set Up Link in Visual Studio Code](/Images%20for%20Readme/NET%20First%20Page.PNG)
-
-If you cannot see it, please click on the "More" link below (shown in the picture above), and you will be able to see all the links in the newly opened dropdown menu. From there, you can select the "Get Started with C# Dev Kit" link. Once, you select that link, click on "Set up your environment" option (or the option where it will ask you to install .NET SDK), shown in the picture below.
-
-![Link to Install .NET SDK from the C# Dev Kit in Visual Studio Code](/Images%20for%20Readme/Install%20NET.PNG)
-
-Then click on the button to install .NET SDK. It will open another new tab on the side where you will see another button saying install .NET SDK (shown below).
-
-![Installing .NET SDK Finally](/Images%20for%20Readme/Install%20NET%202nd.PNG)
-
-Click on it, to install the .NET SDK in your computer. It will install the sdk partially through terminal and partially through setup executable. Once, it is installed, then close the editor. Theoretically, it should setup everything by now. However, I found in one of my computer, turning off my editor was not enough. I had to restart my computer. So, you can restart your computer to install everything properly.
-
-***NOTE:***
-If you see any pop up shows up in Visual Studio Code at the bottom right corner that asks you to setup C++ library, or setup Git, or setup Cmake, etc., then click on the right buttons to setup Visual Studio Code with the packages and PATH variables properly. For example, if it asks you to setup C/C++ with your Visual Studio Code, and give you two choices, i.e., Yes and No, then click on Yes to set it up properly with the IDE. 
-
-## Procedure for Setting Up GDExtension with any Godot Project
-Once your computer is restarted, at first, create a blank project on GitHub and clone it on your computer. Let's say this cloned folder's name is "Soumya-Class-Demo". Once you do that, go to that cloned blank folder and either create a blank Godot project or you can simply copy and paste your already working Godot project folder (which contains all the files in it). Let's say that the Godot project's name is "classDemo". So, inside the "Soumya-Class-Demo" folder, you will see the "classDemo" Godot folder now. Next, you need to create another blank folder under the "Soumya-Class-Demo" folder called "src". In this "src" folder, all of your .cpp files and .h files will be stored. Finally, you can go to [the official tutorial website](https://docs.godotengine.org/en/stable/tutorials/scripting/gdextension/gdextension_cpp_example.html) and download the hard coded SConstruct file on your computer. You can also use the SConstruct file that comes with the current GitHub repo. You then need to place the downloaded SConstruct file in the "Soumya-Class-Demo" folder. This Sconstruct file contains hard coded information to generate the dynamic linking between your C++ scripts and Godot with the GDExtension. So, the folder structure of the "Soumya-Class-Demo" should look like this - 
-
-
-```
-Soumya-Class-Demo          # The parent folder cloned from GitHub
-    |
-    |__ classDemo           # The Godot Project Folder
-    |
-    |__ src                 # A Blank folder where all of your custom .cpp and .h files will go
-    |
-    |__ SConstruct          # This file can be downloaded from the official tutorial or from the current GitHub tutorial repository
-```
-
-
-Now, open Visual Studio Code and click on File -> Open Folder and Open the "Soumya-Class-Demo" folder where you can see all these new file and folder structures. 
-
-***NOTE:***
-As soon as you open this project, it may or may not ask you to select a Cmake file. If you do get any pop up like that, just do not do anything with it now, and let it remain as it is. We need to do some more setups first, and then we will return back to it in a few moments later. 
-
-The first thing that you need to do is to change the content of the SConstruct file. Remember, it is a hard coded file, which means it can only understand a specific project. On line numbers 21, 29, 34, and 39, it shows where will the dynamic link libraries will be generated, i.e., under the Godot project's folder, this file will create a separate folder called "bin" and inside that folder, it will store the dynamic link libraries. However, we need to make sure that our Godot project folder's name is correctly mentioned in those 4 lines. In the current example, the name of our Godot project folder is "classDemo". So, we need to copy that name -> go to the SConstruct file-> go to each of the 4 lines mentioned before -> and replace the folder name before the "bin" folder if it is something else other than "classDemo" for the current project. Here is an image below regarding how should the SConstruct file look like after the edit - 
-
-![An image of the SConstruct file after the editing the Godot Project's name](/Images%20for%20Readme/Sconstruct%20file.png)
-
-After this step, open the terminal once again in Visual Studio Code by going to the "Terminal" option in the Menu Bar and then click on "New Terminal". Then execute this command -
-
-`git clone -b 4.3 https://github.com/godotengine/godot-cpp`
-
-I am assuming that the terminal is considering the current folder where the project is located at (i.e., the current work directory should be the main parent folder, which is "Soumya-Class-Demo" in our case). If not, please make sure that the path should points to the current folder. This command will clone a new folder called "godot-cpp" under the "Soumya-Class-Demo" folder. This is one of the most vital folder because it consists of all the required header and C++ files to write Godot functions in your .cpp files. 
-
-***NOTE:*** 
-While writing the above command in the terminal, make sure that you used "4.3" in the command. This depicts the version of the Godot game engine that we are using in our current project. If there is a version mismatch, it can give you trouble later on.
- 
-Once, the repo is cloned, then execute this command -
-
-`git submodule update --init`
-
-This will create a .gitmodules file in the project directory, which let GitHub know that you are rightfully using the godot-cpp repository from its "4.3" branch (because we are using Godot 4.3). Now, execute this command -
-
-`scons platform=<platform>`
-
-where `<platform>` is either **windows** or **macos** or **linux**. Please replace `<platform>` with your os. For example, if you are using macos, then the command will be -
-
-`scons platform=macos`
-
-This command will generate all the C++ bindings for the project in the "classDemo/bin/" folder as mentioned in the SConstruct file. This will take a long time depending on your computer's hardware. Once this step is done, then close the editor once again, and reopen it. This time, it should ask you to select a path for the cmake file through a dialog box on the right corner or directly through a drop down menu on the top search box. It should look like this -
-
-![A picture showing the Selection of CMakeLists.txt](/Images%20for%20Readme/CmakeLists.png)
-
-If you see the dialog box on the right corner, click on the "Configure Cmake Option Visibility" button (or similar to it). It will automatically suggest you some paths in the drop down menu. Please choose the one that says -
-
-`${workspaceFolder}/godot-cpp/CMakeLists.txt`
-
-It can then ask you to reselct the path once again (It may or may not happen). Please select the same path once again. Next it will ask you to choose a C++ compiler. Choose the option that starts with "Clang". It should look like this -
-
-![A picture showing the Selection of Clang Compiler for compiling Cmake](/Images%20for%20Readme/Clang.png)
-
-***NOTE:***
-On Windows, there can be two Clang compilers. One says Clang x86... and another may say Clang cl... Please choose the Clang x86 one. The x86 can be x64, which is fine also.
-
-Then the editor will compile the project and will create a "build" folder in the project directory. If it fails to create the folder, then again close the editor and reopen it, and it should create the "build" folder automatically this time. That's how, the project is almost setup properly with the GDExtension.
-
-Now, you need to create a blank file under the "classDemo/bin/" folder and give it a name something like "gdexample.gdextension". Inside this file, you need to mention the path where the generated dynamic link libraries are located so that Godot can look into it. You can definitely copy paste the code provided in the gdextension file in [the official tutorial website](https://docs.godotengine.org/en/stable/tutorials/scripting/gdextension/gdextension_cpp_example.html), or you can simply use the gdextension that you can find in the current repository under the current project directory. Just simply copy paste the entire content of the gdextension file in your newly created gdextension file. Again make sure that the "compatibility_minimum" variable in this file should say "4.3" to indicate that we are using Godot 4.3, and the "reloadable" variable should be "true" so that when you compile your cpp codes later, Godot should get the updates immediately. 
-
-Because the "bin/" folder is locally generated based on your OS, so naturally gitignore ignores that folder. However, the gdextension file is very essential so that Godot can talk to the C++ files. So, make sure that the gdextension stays in the "classDemo/bin/" folder. 
-
-We have done setting up our GDextension. Now, we need to do some coding to talk to Godot from the cpp files. So, go to the "src" folder and create two files called "register_types.cpp" and "register_types.h". As you can understand, the .h file is the header file, and the .cpp file is the actual C++ script. This files will help you to register your custom .cpp and .h files so that they can be dynamically linked to Godot. I have basically copy pasted the contents of these two files from [the official tutorial website](https://docs.godotengine.org/en/stable/tutorials/scripting/gdextension/gdextension_cpp_example.html). So, feel free to do that or feel free to use the ones in the current repository. 
-
-***NOTE:***
-A very important to note here is that, whatever custome C++ script and header files you will write for your project, you need to ***(i) import those header files, and (ii) register the classes in the register_types.cpp file.*** In the current GitHub project, I have two custom .cpp and .h files called "keyinput" and "modifyspeed". So, I need to register them in the register_types.cpp file. Here is a picture below showing how can you do that - 
-
-![Registering custom .cpp and .h files in register_types.cpp](/Images%20for%20Readme/Register_Types.png)
-
-Now, once all these setup is done, you are completely free to write your custom .cpp file and .h files. So, if you want to write any script in C++, you need to create a header file, and then you need to include that header file in your cpp file. Then you can write your own C++ code in the .cpp file. Make sure to register these two files with the register_types.cpp file. 
-
-***NOTE:***
-Make sure that the names of both the .h file and the .cpp file are exactly same. Also, make sure that the class names inside these two files follows the exact same naming conventions. Otherwise, you will get errors during compilation. 
-
-Once you do that, then you need to compile the code so that the dynamic linking will be made for you. To do that, go to the Terminal window and execute the command - 
-
-`scons platform=<platform>`
-
-where again `<platform>` means you OS. If there is no error in your code, you will be able to see a new file generated in the "src" folder that has the same name of your custom .cpp and .h file name. However, its extension will be ".os". If you see this file, then you can assure yourself that the dynamic linking is successful now. 
-
-Now, open Godot. Click on "Import", and then find your main parent folder (which is "Soumya-Class-Demo" in this case). Then from there go to your Godot project (which is "classDemo" in our case). Finally open the "project.godot" file. Now, you can click on "Other Node" to import your custom .cpp script as a node in your Godot project. In the dialog box, search for the name of your custom .cpp file (in our case, it is "KeyInput"). Once you find that, select it, and click on "Create". And there you go! You have got your custom written code as a node in Godot. 
-
-You can also, call any public functions that you wrote in your .cpp file from a GDScript. So, in this GitHub tutorial, you can see that the KeyInput class is attached to the "Main" node. Now, let's say that I want to access the "move" function and the speed variable from the KeyInput class from another GDScript to do some other things. How can we do that? Well, we can create a child node under the Main" node, and then we can add a GDScript to it. The name of the GDScript is "node.gd" which you can find in the "classDemo/Scripts/" folder. In that script, I simply accessed the parent node by saying "$..". Because the move function requires a Vector2 value. So, I randomly created a Vector2 value, and I simply called the move function by passing this Vector2 value as a parameter of the function. I also changed the speed variable's value. Note that, I was able to access the function and the variable of the .cpp file because they were public variables. In Godot, if you write any functions without putting an "_" in front of the function, it will be treated as a public function (which follows in your custom .cpp file also). However, you might think that the speed variable is "private" in the header file of the KeyInput class. So, why could we access it? It is because, we are using the Getter and setter functions of C++ which will allow you to access and update a private variable publicly. 
-
-Note that I have written this GDScript in the _ready function because, I just wanted to execute this code once. If you want, you can write anything in the _process function also, based on your own need. Once you complete writing the script, you can play the game. Now, you can see that the "Main" node will show up at (100, 100) position because that's what we said in the GDScript and as it talked to the .cpp file, it translated the node to the (100, 100) position. Also, now if you press the up, down, right, left arrows, you can still be able to move the "Main" node in the screen because you are utilizing your .cpp script now. 
-
-You can also call your custom method from your GDScript to one of your C++ script. How can you do that? Well, for that, you can consider the "Secondary.tscn" scene in the Godot project. If you open that scene, you will see that a GDscript called "secondary.gd" is attached with the parent node. This script looks very similar to the "keyinput.cpp" class that we wrote earlier, and in fact it does exactly the same thing. This GDscript will check if the WASD keys or the arrow keys are pressed or not and based on the input, it will move the node in the scene. Now, what we want is to access the "move" function and the "speed" variable from the GDscript from another C++ script. So, you can see another C++ script in the "src" folder called "modifyspeed.cpp" where we wrote the logic for this task. The main method in that script is the "process_secondary_script()" method where all the magic happens. You can take a look at the script to understand how can you talk to the GDscript from the C++ script. Also, I called this method from the _ready() method in the C++ script. However, I used a "call_deferred()" method. This method will ensure that all the children are initialized properly, and then the "process_secondary_script()" method will be executed. If you do not want this feature, feel free to call the "process_secondary_script()" method alone instead. 
-
-## The main workflow of GDExtension in short
-
-Okay, in short, whenever you want to write C++ scripts for Godot, I would suggest you to check - 
-
-1. Whether you followed the folder structure in your project (i.e., inside the parent folder, there will be the Godot project, the Godot-cpp folder downloaded from GitHub repo, src folder, and the SConstruct file).
-2. Run the command scons platform=`<platform>` command.
-3. After the binding compilation, put the “.gdextension” file in the Godot project/bin folder. 
-4. Then write all of your cpp and header files in the “src” folder.
-5. Once you do that, then run the command again - scons platform=`<platform>`.
-6. If everything works properly, then you can see the “.os” file generated in the “src” folder.
-7. Once you do that, then you can come to Godot, and then you should be able to find the Cpp node in Godot.
-8. If you cannot find it, then close Godot, and restart it. Then you should be able to find it.
-9. Once you can see it, you can drag it to the Node window and you can access the node in Godot. 
-10. For Gdscript, you can create another child node, and add a gdscript with it. Then you can write your code over there to access the cpp file from there if you want. 
-
-This is the workflow sequence that you need to follow to write C++ scripts for Godot Game Engine. 
-
-## Conclusion
-
-I hope, this tutorial makes sense to you. For further details, please consider checking [the official tutorial website](https://docs.godotengine.org/en/stable/tutorials/scripting/gdextension/gdextension_cpp_example.html) about how to setup the gdextension with Godot. Also, feel free to contact me if you face any problem. Enjoy playing with C++ and Godot!
+I hope, these tutorials will help you to understand the concepts better. Feel free to play with the tutorials to understand the concepts better. 
